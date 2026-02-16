@@ -11,24 +11,17 @@
 
     <artifactId>ON-entity</artifactId>
 
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
-        <!--引入公共类-->
+        <!--公共模块依赖-->
         <dependency>
             <groupId>com.xuan</groupId>
             <artifactId>ON-common</artifactId>
-            <version>${project.version}</version>
         </dependency>
-        <!--mybatis-plus-->
+
+        <!--mybatis-plus依赖-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
         </dependency>
     </dependencies>
-
 </project>
