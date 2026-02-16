@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
  * 文件上传请求参数类
  * 对应接口：7.1 上传文件
  * 用于接收前端文件上传的参数
+ * @author 玄〤
+ * @since 2026-02-16
  */
 @Data
 public class UploadDTO {
