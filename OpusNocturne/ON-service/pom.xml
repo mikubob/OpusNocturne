@@ -18,12 +18,6 @@
             <artifactId>ON-entity</artifactId>
         </dependency>
 
-        <!--web-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
         <!--数据库连接池-->
         <dependency>
             <groupId>com.alibaba</groupId>
