@@ -1,7 +1,7 @@
-package com.xuan.common;
+package com.xuan.common.domain;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 /**

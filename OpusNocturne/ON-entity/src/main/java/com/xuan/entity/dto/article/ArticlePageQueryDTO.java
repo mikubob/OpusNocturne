@@ -1,6 +1,6 @@
 package com.xuan.entity.dto.article;
 
-import com.xuan.common.BasePageQueryDTO;
+import com.xuan.common.domain.BasePageQueryDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

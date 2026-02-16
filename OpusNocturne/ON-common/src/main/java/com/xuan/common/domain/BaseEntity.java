@@ -1,4 +1,4 @@
-package com.xuan.common;
+package com.xuan.common.domain;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;

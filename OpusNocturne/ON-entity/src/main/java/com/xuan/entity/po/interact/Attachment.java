@@ -1,7 +1,7 @@
 package com.xuan.entity.po.interact;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.xuan.common.BaseEntity;
+import com.xuan.common.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

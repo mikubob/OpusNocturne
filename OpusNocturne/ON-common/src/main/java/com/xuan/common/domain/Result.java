@@ -1,4 +1,4 @@
-package com.xuan.common;
+package com.xuan.common.domain;
 
 import lombok.Data;
 
