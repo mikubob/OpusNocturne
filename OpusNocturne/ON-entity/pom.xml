@@ -17,11 +17,5 @@
             <groupId>com.xuan</groupId>
             <artifactId>ON-common</artifactId>
         </dependency>
-
-        <!--mybatis-plus依赖-->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-        </dependency>
     </dependencies>
 </project>
