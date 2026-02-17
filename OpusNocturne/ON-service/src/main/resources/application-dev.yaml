@@ -1,4 +1,11 @@
 spring:
+  # 序列化
+  jackson:
+    # 时间格式
+    date-format: yyyy-MM-dd HH:mm:ss
+    # 时区
+    time-zone: Asia/Shanghai
+
   # 数据源配置
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -8,26 +15,27 @@ spring:
 
     # Druid连接池配置
     druid:
-      initial-size: 5
-      min-idle: 5
-      max-active: 20
-      max-wait: 60000
-      time-between-eviction-runs-millis: 60000
-      min-evictable-idle-time-millis: 300000
-      validation-query: SELECT 1
-      test-while-idle: true
-      pool-prepared-statements: true
+      initial-size: 5 #初始连接池大小
+      min-idle: 5 #最小连接池数量
+      max-active: 20 #最大连接池数量
+      max-wait: 60000 #等待连接池中的连接的最大时长,时间单位为毫秒
+      time-between-eviction-runs-millis: 60000 #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      min-evictable-idle-time-millis: 300000 #连接保持空闲的最大时间，单位是毫秒
+      validation-query: SELECT 1 #配置检测连接是否有效
+      test-while-idle: true #配置检测连接是否有效
+      pool-prepared-statements: true #配置是否缓存preparedStatement
       # 监控统计
       stat-view-servlet:
-        enabled: true
-        url-pattern: /druid/*
-        login-username: admin
-        login-password: 1234
+        enabled: true #是否启用StatViewServlet
+        url-pattern: /druid/* #配置StatViewServlet的访问地址
+        login-username: admin #登录账号
+        login-password: 1234 #登录密码
+      # SQL监控
       filter:
         stat:
-          enabled: true
-          slow-sql-millis: 1000
-          log-slow-sql: true
+          enabled: true #是否启用StatFilter
+          slow-sql-millis: 1000 #慢SQL记录时间
+          log-slow-sql: true #慢SQL记录
 
   # Redis 配置
   data:
@@ -40,16 +48,18 @@ spring:
 
 # MyBatis-Plus 配置
 mybatis-plus:
-  mapper-locations: classpath*:/mapper/**/*.xml
+  mapper-locations: classpath*:/mapper/**/*.xml #扫描的mapper文件
+  # 全局配置
   configuration:
-    map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true #驼峰命名
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #输出SQL
+    # 数据库字段映射
   global-config:
     db-config:
-      id-type: auto
-      logic-delete-field: isDelete
-      logic-delete-value: 1
-      logic-not-delete-value: 0
+      id-type: auto # 主键自增
+      logic-delete-field: isDelete #逻辑删除字段
+      logic-delete-value: 1 #逻辑删除字段值
+      logic-not-delete-value: 0 #逻辑未删除字段值
 
 logging:
   level:
