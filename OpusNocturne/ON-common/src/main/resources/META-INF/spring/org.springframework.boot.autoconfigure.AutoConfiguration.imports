@@ -1,2 +1,3 @@
 com.xuan.common.config.Knife4jConfig
 com.xuan.common.config.RedisConfig
+com.xuan.common.config.MybatisPlusConfig
