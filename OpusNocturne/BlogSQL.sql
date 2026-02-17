@@ -187,4 +187,41 @@ create table comment (
     key idx_article_root (article_id, root_parent_id) comment '文章+根评论索引优化(查询文章评论树)'
 ) engine = innodb default charset = utf8mb4 comment = '评论表';
 
+-- 模块四：系统设置
+-- 系统设置表
+drop table if exists sys_setting;
+create table sys_setting (
+    id bigint not null auto_increment comment '主键id',
+    site_name varchar(100) default 'OpusNocturne' comment '站点名称',
+    site_description varchar(255) default '个人技术博客' comment '站点描述',
+    site_keywords varchar(255) default 'Java,Spring Boot,前端' comment '站点关键词',
+    footer_text varchar(255) default '© 2026 OpusNocturne' comment '页脚文本',
+    admin_email varchar(100) default null comment '管理员邮箱',
+    comment_audit tinyint not null default 1 comment '评论是否需要审核：1-是；0-否',
+    article_page_size int not null default 10 comment '文章列表每页条数',
+    comment_page_size int not null default 20 comment '评论列表每页条数',
+    is_delete tinyint not null default 0 comment '逻辑删除：1-是；0-否',
+    create_time datetime not null default current_timestamp comment '创建时间',
+    update_time datetime not null default current_timestamp on update current_timestamp comment '更新时间',
+    primary key (id)
+) engine = innodb default charset = utf8mb4 comment = '系统设置表';
+
+-- 模块五：访问统计
+-- 访问记录表
+drop table if exists visit_log;
+create table visit_log (
+    id bigint not null auto_increment comment '主键id',
+    ip_address varchar(50) default null comment 'IP地址',
+    user_agent varchar(500) default null comment '设备信息',
+    visit_time datetime not null default current_timestamp comment '访问时间',
+    page_url varchar(500) default null comment '访问页面URL',
+    referer varchar(500) default null comment '来源URL',
+    is_delete tinyint not null default 0 comment '逻辑删除：1-是；0-否',
+    create_time datetime not null default current_timestamp comment '创建时间',
+    update_time datetime not null default current_timestamp on update current_timestamp comment '更新时间',
+    primary key (id),
+    key idx_visit_time (visit_time),
+    key idx_page_url (page_url)
+) engine = innodb default charset = utf8mb4 comment = '访问记录表';
+
 SET FOREIGN_KEY_CHECKS = 1;-- 开启外键

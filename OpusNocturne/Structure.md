@@ -83,6 +83,8 @@ OpusNocturne/
 │   │                       │   ├── blog/        # 博客相关实体
 │   │                       │   ├── interact/    # 互动相关实体
 │   │                       │   └── sys/         # 系统相关实体
+│   │                       │       ├── SysSetting.java         # 系统设置实体
+│   │                       │       └── VisitLog.java           # 访问记录实体
 │   │                       └── vo/              # 视图对象
 │   │                           ├── article/     # 文章相关VO
 │   │                           ├── auth/        # 认证相关VO
@@ -122,9 +124,15 @@ OpusNocturne/
 │   │       │               │       ├── CommentController.java      # 评论前台控制器
 │   │       │               │       └── TagController.java          # 标签前台控制器
 │   │       │               ├── mapper/          # 数据访问
+│   │       │               │   ├── SysSettingMapper.java          # 系统设置Mapper
+│   │       │               │   └── VisitLogMapper.java            # 访问记录Mapper
 │   │       │               ├── service/         # 业务服务
 │   │       │               │   ├── impl/        # 服务实现
+│   │       │               │   │   ├── SysSettingServiceImpl.java   # 系统设置服务实现
+│   │       │               │   │   └── VisitLogServiceImpl.java     # 访问记录服务实现
 │   │       │               │   └── interfaces/  # 服务接口
+│   │       │               │       ├── ISysSettingService.java      # 系统设置服务接口
+│   │       │               │       └── IVisitLogService.java        # 访问记录服务接口
 │   │       │               └── OpusNocturneApplication.java  # 应用程序主类
 │   │       └── resources/
 │   │           ├── mapper/            # MyBatis映射文件

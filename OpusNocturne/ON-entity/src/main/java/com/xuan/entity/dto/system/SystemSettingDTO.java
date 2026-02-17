@@ -67,4 +67,5 @@ public class SystemSettingDTO implements Serializable {
      */
     @Schema(description = "评论列表每页条数", example = "20")
     private Integer commentPageSize;
+
 }

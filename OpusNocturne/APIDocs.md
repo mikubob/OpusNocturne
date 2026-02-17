@@ -491,16 +491,22 @@ axios.put('/api/admin/user/1/reset-password', {
 
 **请求体 (JSON)**
 
-| 字段名 | 类型 | 必填 | 说明 |
-|:---|:---|:---|:---|
-| title | string | 是 | 文章标题 |
-| content | string | 是 | 文章内容 (Markdown格式) |
-| summary | string | 否 | 摘要 |
-| categoryId | long | 是 | 分类ID |
-| tagIds | array | 否 | 标签ID列表，如 `[1, 3]` |
-| coverImg | string | 否 | 封面图片URL |
-| isTop | int | 否 | 是否置顶：1-是，0-否 |
-| status | int | 是 | 状态：0-草稿，1-发布，2-下架 |
+| 字段名 | 类型 | 必填 | 说明 | 对应数据库表 |
+|:---|:---|:---|:---|:---|
+| title | string | 是 | 文章标题 | `article` |
+| content | string | 是 | 文章内容 (Markdown格式) | `article` |
+| summary | string | 否 | 摘要 | `article` |
+| categoryId | long | 是 | 分类ID | `article` |
+| tagIds | array | 否 | 标签ID列表，如 `[1, 3]` | `article_tag` |
+| coverImg | string | 否 | 封面图片URL | `article` |
+| isTop | int | 否 | 是否置顶：1-是，0-否 | `article` |
+| status | int | 是 | 状态：0-草稿，1-发布，2-下架 | `article` |
+
+**标签关联管理说明**
+- 通过 `tagIds` 参数传递文章关联的标签ID列表
+- 系统会自动处理 `article_tag` 表中的关联关系
+- 创建文章时，会根据 `tagIds` 生成对应的文章-标签关联记录
+- 这种方式简化了标签管理流程，无需单独的接口来管理关联关系
 
 **前端调用示例**
 ```javascript
@@ -599,16 +605,22 @@ axios.post('/api/admin/article', {
 
 **请求体 (JSON)**
 
-| 字段名 | 类型 | 必填 | 说明 |
-|:---|:---|:---|:---|
-| title | string | 是 | 文章标题 |
-| content | string | 是 | 文章内容 (Markdown格式) |
-| summary | string | 否 | 摘要 |
-| categoryId | long | 是 | 分类ID |
-| tagIds | array | 否 | 标签ID列表，如 `[1, 3]` |
-| coverImg | string | 否 | 封面图片URL |
-| isTop | int | 否 | 是否置顶：1-是，0-否 |
-| status | int | 是 | 状态：0-草稿，1-发布，2-下架 |
+| 字段名 | 类型 | 必填 | 说明 | 对应数据库表 |
+|:---|:---|:---|:---|:---|
+| title | string | 是 | 文章标题 | `article` |
+| content | string | 是 | 文章内容 (Markdown格式) | `article` |
+| summary | string | 否 | 摘要 | `article` |
+| categoryId | long | 是 | 分类ID | `article` |
+| tagIds | array | 否 | 标签ID列表，如 `[1, 3]` | `article_tag` |
+| coverImg | string | 否 | 封面图片URL | `article` |
+| isTop | int | 否 | 是否置顶：1-是，0-否 | `article` |
+| status | int | 是 | 状态：0-草稿，1-发布，2-下架 | `article` |
+
+**标签关联管理说明**
+- 通过 `tagIds` 参数传递文章关联的标签ID列表
+- 系统会自动处理 `article_tag` 表中的关联关系
+- 更新文章时，会先删除原有的标签关联记录，再根据 `tagIds` 重新生成新的关联记录
+- 这种方式简化了标签管理流程，无需单独的接口来管理关联关系
 
 **成功响应**
 ```json
@@ -2195,7 +2207,7 @@ axios.post('/api/admin/permission', {
 
 - **接口路径**: `/api/admin/setting`
 - **HTTP 方法**: `GET`
-- **功能描述**: 获取系统设置信息
+- **功能描述**: 获取系统设置信息，从 `sys_setting` 表中读取配置
 - **是否认证**: 是
 
 **成功响应**
@@ -2216,27 +2228,39 @@ axios.post('/api/admin/permission', {
 }
 ```
 
+**字段说明**
+| 字段名 | 类型 | 说明 | 对应数据库字段 |
+|:---|:---|:---|:---|
+| siteName | string | 站点名称 | `site_name` |
+| siteDescription | string | 站点描述 | `site_description` |
+| siteKeywords | string | 站点关键词 | `site_keywords` |
+| footerText | string | 页脚文本 | `footer_text` |
+| adminEmail | string | 管理员邮箱 | `admin_email` |
+| commentAudit | boolean | 评论是否需要审核 | `comment_audit` |
+| articlePageSize | int | 文章列表每页条数 | `article_page_size` |
+| commentPageSize | int | 评论列表每页条数 | `comment_page_size` |
+
 ---
 
 ### 10.2 更新系统设置
 
 - **接口路径**: `/api/admin/setting`
 - **HTTP 方法**: `PUT`
-- **功能描述**: 更新系统设置信息
+- **功能描述**: 更新系统设置信息，将配置保存到 `sys_setting` 表
 - **是否认证**: 是
 
 **请求体 (JSON)**
 
-| 字段名 | 类型 | 必填 | 说明 |
-|:---|:---|:---|:---|
-| siteName | string | 否 | 站点名称 |
-| siteDescription | string | 否 | 站点描述 |
-| siteKeywords | string | 否 | 站点关键词 |
-| footerText | string | 否 | 页脚文本 |
-| adminEmail | string | 否 | 管理员邮箱 |
-| commentAudit | boolean | 否 | 评论是否需要审核 |
-| articlePageSize | int | 否 | 文章列表每页条数 |
-| commentPageSize | int | 否 | 评论列表每页条数 |
+| 字段名 | 类型 | 必填 | 说明 | 对应数据库字段 |
+|:---|:---|:---|:---|:---|
+| siteName | string | 否 | 站点名称 | `site_name` |
+| siteDescription | string | 否 | 站点描述 | `site_description` |
+| siteKeywords | string | 否 | 站点关键词 | `site_keywords` |
+| footerText | string | 否 | 页脚文本 | `footer_text` |
+| adminEmail | string | 否 | 管理员邮箱 | `admin_email` |
+| commentAudit | boolean | 否 | 评论是否需要审核 | `comment_audit` |
+| articlePageSize | int | 否 | 文章列表每页条数 | `article_page_size` |
+| commentPageSize | int | 否 | 评论列表每页条数 | `comment_page_size` |
 
 **成功响应**
 ```json
@@ -2307,7 +2331,7 @@ axios.post('/api/admin/permission', {
 
 - **接口路径**: `/api/admin/statistics/visit`
 - **HTTP 方法**: `GET`
-- **功能描述**: 获取站点访问统计信息
+- **功能描述**: 获取站点访问统计信息，从 `visit_log` 表中分析数据，包括访问量、页面浏览量和访问趋势
 - **是否认证**: 是
 
 **查询参数**
@@ -2328,9 +2352,27 @@ axios.post('/api/admin/permission', {
     "trend": [
       { "date": "2026-02-10", "visits": 120, "pageViews": 250 },
       { "date": "2026-02-11", "visits": 150, "pageViews": 300 }
+    ],
+    "topPages": [
+      { "pageUrl": "/blog/article/1", "views": 500 },
+      { "pageUrl": "/blog/article/2", "views": 300 }
     ]
   }
 }
 ```
+
+**字段说明**
+| 字段名 | 类型 | 说明 | 对应数据库表 |
+|:---|:---|:---|:---|
+| totalVisits | int | 总访问次数 | `visit_log` |
+| totalPageViews | int | 总页面浏览量 | `visit_log` |
+| avgVisitTime | int | 平均访问时长(秒) | `visit_log` |
+| trend | array | 访问趋势数据 | `visit_log` |
+| topPages | array | 热门页面排行 | `visit_log` |
+
+**数据来源说明**
+- 访问数据从 `visit_log` 表中获取，该表存储了详细的站点访问记录
+- 支持按时间范围查询，默认查询最近7天的数据
+- 通过 `visit_time` 和 `page_url` 索引优化查询性能
 
 ---
