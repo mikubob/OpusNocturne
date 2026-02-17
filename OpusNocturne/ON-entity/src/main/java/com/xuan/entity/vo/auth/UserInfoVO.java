@@ -1,7 +1,10 @@
 package com.xuan.entity.vo.auth;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,34 +15,44 @@ import java.util.List;
  * @since 2026-02-16
  */
 @Data
-public class UserInfoVO {
+@Schema(description = "用户信息响应数据类")
+public class UserInfoVO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
     /**
      * 用户ID
      */
+    @Schema(description = "用户ID", example = "1")
     private Long id;
     
     /**
      * 用户名
      */
+    @Schema(description = "用户名", example = "admin")
     private String username;
     
     /**
      * 昵称
      */
+    @Schema(description = "昵称", example = "玄〤")
     private String nickname;
     
     /**
      * 头像
      */
+    @Schema(description = "头像", example = "https://cdn.jsdelivr.net/gh/xuan-xuan/blog-images/avatar.png")
     private String avatar;
     
     /**
      * 邮箱
      */
+    @Schema(description = "邮箱", example = "admin@example.com")
     private String email;
     
     /**
      * 权限列表
      */
+    @Schema(description = "权限列表", example = "[\"sys:user:list\",\"sys:user:add\"]")
     private List<String> permissions;
 }

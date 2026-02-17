@@ -1,6 +1,8 @@
 package com.xuan.entity.dto.user;
 
 import com.xuan.common.domain.BasePageQueryDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,14 +15,19 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Schema(description = "用户列表分页查询参数类")
 public class UserPageQueryDTO extends BasePageQueryDTO {
     /**
      * 用户名搜索
      */
+    @Size(max = 50, message = "用户名搜索长度不能超过50个字符")
+    @Schema(description = "用户名搜索", example = "admin")
     private String username;
     
     /**
      * 昵称搜索
      */
+    @Size(max = 50, message = "昵称搜索长度不能超过50个字符")
+    @Schema(description = "昵称搜索", example = "管理员")
     private String nickname;
 }

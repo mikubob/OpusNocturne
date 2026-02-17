@@ -45,6 +45,15 @@ spring:
       password: 123456
       database: 4
       timeout: 5000ms
+  
+  # 文件上传配置
+  servlet:
+    multipart:
+      enabled: true                    # 启用文件上传
+      max-file-size: 10MB              # 单个文件最大大小
+      max-request-size: 10MB           # 整个请求最大大小
+      file-size-threshold: 2KB         # 文件大小阈值，超过则写入临时文件
+      location: ./temp                 # 临时文件存储位置
 
 # MyBatis-Plus 配置
 mybatis-plus:

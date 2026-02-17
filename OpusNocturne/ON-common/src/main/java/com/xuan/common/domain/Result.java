@@ -2,6 +2,9 @@ package com.xuan.common.domain;
 
 import lombok.Data;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * 统一响应包装类
  * 用于所有接口的统一返回格式
@@ -11,8 +14,11 @@ import lombok.Data;
  * @since 2026-02-16
  */
 @Data
-public class Result<T> {
-    
+public class Result<T> implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     /**
      * 响应码
      * 200: 成功, 其他: 失败

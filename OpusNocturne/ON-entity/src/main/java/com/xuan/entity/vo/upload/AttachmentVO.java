@@ -1,28 +1,30 @@
-package com.xuan.entity.po.interact;
+package com.xuan.entity.vo.upload;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.xuan.common.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
- * 附件/资源表实体类
- * 对应数据库表：attachment
- * 用于存储上传的文件信息
+ * 附件管理响应数据类
+ * 对应接口：7.2 附件管理
+ * 用于返回附件的详细信息
  * @author 玄〤
- * @since 2026-02-16
+ * @since 2026-02-17
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-@TableName("attachment")
-@Schema(description = "附件/资源表实体类")
-public class Attachment extends BaseEntity {
+@Schema(description = "附件管理响应数据类")
+public class AttachmentVO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
+    /**
+     * 附件ID
+     */
+    @Schema(description = "附件ID", example = "1")
+    private Long id;
 
     /**
      * 原文件名
@@ -37,12 +39,6 @@ public class Attachment extends BaseEntity {
     private String fileUrl;
 
     /**
-     * 储存路径
-     */
-    @Schema(description = "储存路径", example = "/uploads/2026/02/16/cover.png")
-    private String filePath;
-
-    /**
      * 文件类型
      */
     @Schema(description = "文件类型", example = "image/png")
@@ -55,14 +51,20 @@ public class Attachment extends BaseEntity {
     private Long fileSize;
 
     /**
-     * 业务类型(article/avatar)
+     * 业务类型
      */
-    @Schema(description = "业务类型(article/avatar)", example = "article")
+    @Schema(description = "业务类型", example = "article")
     private String bizType;
 
     /**
-     * 业务id
+     * 业务ID
      */
-    @Schema(description = "业务id", example = "100")
+    @Schema(description = "业务ID", example = "100")
     private Long bizId;
+
+    /**
+     * 创建时间
+     */
+    @Schema(description = "创建时间", example = "2026-02-17T10:00:00")
+    private LocalDateTime createTime;
 }
