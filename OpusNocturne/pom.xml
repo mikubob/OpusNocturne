@@ -36,6 +36,8 @@
         <knife4j.version>4.5.0</knife4j.version>
         <hutool.version>5.8.32</hutool.version>
         <mysql.version>8.4.0</mysql.version>
+        <fastjson2.version>2.0.54</fastjson2.version>
+        <servlet.version>4.0.1</servlet.version>
     </properties>
 
     <!--依赖管理-->
@@ -107,6 +109,19 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-redis</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+            <!--FastJSON2-->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+            <!-- Servlet API 依赖 , 用于处理 Servlet 请求和响应-->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${servlet.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
