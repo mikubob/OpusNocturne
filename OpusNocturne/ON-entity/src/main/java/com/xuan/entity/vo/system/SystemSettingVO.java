@@ -10,6 +10,7 @@ import java.io.Serializable;
  * 系统设置响应数据类
  * 对应接口：10.1 获取系统设置
  * 用于返回系统设置信息
+ * 
  * @author 玄〤
  * @since 2026-02-17
  */
@@ -67,5 +68,8 @@ public class SystemSettingVO implements Serializable {
      */
     @Schema(description = "评论列表每页条数", example = "20")
     private Integer commentPageSize;
+
+    @Schema(description = "关于我")
+    private String aboutMe;
 
 }

@@ -136,4 +136,29 @@ public class AuthServiceImpl implements IAuthService {
         loginVO.setTokenHead(jwtUtils.getTokenPrefix());
         return loginVO;
     }
+
+    @Override
+    public void changePassword(Long userId, com.xuan.entity.dto.auth.ChangePasswordDTO dto) {
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            throw new BusinessException(ErrorCode.PARAM_ERROR.getCode(), "两次输入密码不一致");
+        }
+
+        SysUser user = sysUserMapper.selectById(userId);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        // 使用 PasswordUtils 校验
+        if (!PasswordUtils.matches(dto.getOldPassword(), user.getPassword())) {
+            throw new BusinessException(ErrorCode.PARAM_ERROR.getCode(), "原密码错误");
+        }
+
+        // 加密新密码并更新
+        sysUserMapper.update(null, new LambdaUpdateWrapper<SysUser>()
+                .eq(SysUser::getId, userId)
+                .set(SysUser::getPassword, PasswordUtils.encode(dto.getNewPassword())));
+
+        // 登出用户（删除 Token），强制重新登录
+        logout(user.getUsername());
+    }
 }

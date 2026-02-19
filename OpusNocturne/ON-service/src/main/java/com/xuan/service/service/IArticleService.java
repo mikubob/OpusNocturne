@@ -36,5 +36,22 @@ public interface IArticleService extends IService<Article> {
     Page<ArticleListVO> pageBlogArticles(ArticlePageQueryDTO dto);
 
     /** 前台：获取文章详情 */
+    /** 前台：获取文章详情 */
     ArticleDetailVO getBlogArticleDetail(Long id);
+
+    /**
+     * 获取文章归档
+     *
+     * @return 归档列表
+     */
+    java.util.List<com.xuan.entity.vo.article.ArchiveVO> getArchive();
+
+    /**
+     * 文章点赞
+     *
+     * @param id 文章ID
+     * @param ip 用户IP
+     * @return 最新点赞数
+     */
+    Long likeArticle(Long id, String ip);
 }

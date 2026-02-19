@@ -10,6 +10,7 @@ import java.io.Serializable;
  * 系统设置请求参数类
  * 对应接口：10.2 更新系统设置
  * 用于接收前端更新系统设置的参数
+ * 
  * @author 玄〤
  * @since 2026-02-17
  */
@@ -67,5 +68,8 @@ public class SystemSettingDTO implements Serializable {
      */
     @Schema(description = "评论列表每页条数", example = "20")
     private Integer commentPageSize;
+
+    @Schema(description = "关于我")
+    private String aboutMe;
 
 }

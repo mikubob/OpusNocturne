@@ -236,6 +236,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             ArticleListVO vo = BeanUtil.copyProperties(article, ArticleListVO.class);
             // 从 Redis 获取实时浏览量
             vo.setViewCount(getViewCountFromRedis(article.getId(), article.getViewCount()));
+            // 填充点赞数
+            vo.setLikeCount(getLikeCountFromRedis(article.getId()));
             // 填充分类名称
             if (article.getCategoryId() != null) {
                 Category category = categoryMapper.selectById(article.getCategoryId());
@@ -269,6 +271,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         ArticleDetailVO vo = BeanUtil.copyProperties(article, ArticleDetailVO.class);
         // 设置实时浏览量
         vo.setViewCount(getViewCountFromRedis(id, article.getViewCount()));
+        // 填充点赞数
+        vo.setLikeCount(getLikeCountFromRedis(id));
 
         // 填充分类名称
         if (article.getCategoryId() != null) {
@@ -299,6 +303,104 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return vo;
     }
 
+    @Override
+    public List<com.xuan.entity.vo.article.ArchiveVO> getArchive() {
+        // 1. 查询所有已发布文章
+        List<Article> articles = this.lambdaQuery()
+                .select(Article::getId, Article::getTitle, Article::getCreateTime)
+                .eq(Article::getStatus, 1)
+                .orderByDesc(Article::getCreateTime)
+                .list();
+
+        // 2. 按年月分组
+        java.util.Map<String, List<Article>> yearMap = new java.util.LinkedHashMap<>();
+        for (Article article : articles) {
+            String year = String.valueOf(article.getCreateTime().getYear());
+            yearMap.computeIfAbsent(year, k -> new ArrayList<>()).add(article);
+        }
+
+        List<com.xuan.entity.vo.article.ArchiveVO> result = new ArrayList<>();
+        for (java.util.Map.Entry<String, List<Article>> entry : yearMap.entrySet()) {
+            com.xuan.entity.vo.article.ArchiveVO vo = new com.xuan.entity.vo.article.ArchiveVO();
+            vo.setYear(entry.getKey());
+
+            // 该年份下的文章按月份分组
+            java.util.Map<String, List<Article>> monthMap = new java.util.LinkedHashMap<>();
+            for (Article article : entry.getValue()) {
+                String month = String.format("%02d", article.getCreateTime().getMonthValue());
+                monthMap.computeIfAbsent(month, k -> new ArrayList<>()).add(article);
+            }
+
+            List<com.xuan.entity.vo.article.ArchiveVO.ArchiveMonthVO> monthVOs = new ArrayList<>();
+            for (java.util.Map.Entry<String, List<Article>> monthEntry : monthMap.entrySet()) {
+                com.xuan.entity.vo.article.ArchiveVO.ArchiveMonthVO monthVO = new com.xuan.entity.vo.article.ArchiveVO.ArchiveMonthVO();
+                monthVO.setMonth(monthEntry.getKey());
+                monthVO.setCount(monthEntry.getValue().size());
+
+                List<com.xuan.entity.vo.article.ArchiveVO.ArchiveArticleVO> articleVOs = monthEntry.getValue().stream()
+                        .map(a -> {
+                            com.xuan.entity.vo.article.ArchiveVO.ArchiveArticleVO articleVO = new com.xuan.entity.vo.article.ArchiveVO.ArchiveArticleVO();
+                            articleVO.setId(a.getId());
+                            articleVO.setTitle(a.getTitle());
+                            articleVO.setCreateTime(
+                                    cn.hutool.core.date.DateUtil.format(a.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
+                            articleVO.setDay(String.format("%02d", a.getCreateTime().getDayOfMonth()));
+                            return articleVO;
+                        }).collect(Collectors.toList());
+
+                monthVO.setArticles(articleVOs);
+                monthVOs.add(monthVO);
+            }
+            vo.setMonths(monthVOs);
+            result.add(vo);
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long likeArticle(Long id, String ip) {
+        // 1. 检查文章是否存在
+        Article article = this.lambdaQuery()
+                .select(Article::getId, Article::getStatus)
+                .eq(Article::getId, id)
+                .one();
+        if (article == null || article.getStatus() != 1) {
+            throw new BusinessException(ErrorCode.ARTICLE_NOT_FOUND);
+        }
+
+        // 2. 检查是否重复点赞（基于 IP）
+        // Key: article:like:user:{articleId}:{ip}
+        String userKey = RedisConstant.ARTICLE_USER_LIKE_KEY_PREFIX + id + ":" + ip;
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(userKey))) {
+            throw new BusinessException("您已经点过赞了");
+        }
+
+        // 3. 更新数据库 (like_count + 1)
+        boolean success = this.update(new com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<Article>()
+                .setSql("like_count = like_count + 1")
+                .eq(Article::getId, id));
+        if (!success) {
+            throw new BusinessException("点赞失败");
+        }
+
+        // 4. 更新 Redis
+        // Key: article:like:count:{articleId}
+        String countKey = RedisConstant.ARTICLE_LIKE_COUNT_KEY_PREFIX + id;
+        Long newCount;
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(countKey))) {
+            newCount = redisTemplate.opsForValue().increment(countKey);
+        } else {
+            // RedisKey 不存在，重新从 DB 加载（此时 DB 已 +1）
+            newCount = getLikeCountFromRedis(id);
+        }
+
+        // 5. 记录用户点赞状态（24小时过期，防止频繁重复）
+        redisTemplate.opsForValue().set(userKey, "1", 1, java.util.concurrent.TimeUnit.DAYS);
+
+        return newCount;
+    }
+
     // ==================== 私有辅助方法 ====================
 
     /**
@@ -317,6 +419,26 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             }
             articleTagMapper.batchInsertArticleTags(articleTags);
         }
+    }
+
+    /**
+     * 从 Redis 获取点赞数（优先读 Redis，未命中读 DB 并回填）
+     */
+    private Long getLikeCountFromRedis(Long articleId) {
+        String key = RedisConstant.ARTICLE_LIKE_COUNT_KEY_PREFIX + articleId;
+        String val = redisTemplate.opsForValue().get(key);
+        if (val != null) {
+            return Long.parseLong(val);
+        }
+
+        // Redis 未命中，读 DB
+        Article article = this.getById(articleId);
+        Long likeCount = (article != null && article.getLikeCount() != null) ? article.getLikeCount() : 0L;
+
+        // 回填 Redis (24小时过期)
+        redisTemplate.opsForValue().set(key, String.valueOf(likeCount), 24, java.util.concurrent.TimeUnit.HOURS);
+
+        return likeCount;
     }
 
     /**

@@ -47,7 +47,26 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                         .orderByAsc(Comment::getCreateTime));
 
         // 构建评论树
-        return buildCommentTree(comments);
+        return buildCommentTree(comments); // 假设 buildCommentTree 是私有方法，原代码里有调用
+    }
+
+    @Override
+    public Map<String, Long> getArticleCommentStats(Long articleId) {
+        Long total = this.lambdaQuery()
+                .eq(Comment::getArticleId, articleId)
+                .eq(Comment::getStatus, 1)
+                .count();
+        Long rootCount = this.lambdaQuery()
+                .eq(Comment::getArticleId, articleId)
+                .eq(Comment::getStatus, 1)
+                .isNull(Comment::getParentId)
+                .count();
+
+        Map<String, Long> map = new java.util.HashMap<>();
+        map.put("total", total != null ? total : 0L);
+        map.put("rootCount", rootCount != null ? rootCount : 0L);
+        map.put("replyCount", (total != null ? total : 0L) - (rootCount != null ? rootCount : 0L));
+        return map;
     }
 
     @Override

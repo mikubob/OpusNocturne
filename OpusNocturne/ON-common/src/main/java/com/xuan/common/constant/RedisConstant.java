@@ -47,6 +47,12 @@ public final class RedisConstant {
     /** 文章详情缓存过期时间（分钟） */
     public static final long ARTICLE_DETAIL_TTL_MINUTES = 30;
 
+    /** 文章点赞数缓存 Key 前缀，完整 Key: article:like:count:{articleId} */
+    public static final String ARTICLE_LIKE_COUNT_KEY_PREFIX = "article:like:count:";
+
+    /** 用户是否点赞缓存 Key 前缀，完整 Key: article:like:user:{articleId}:{ip} */
+    public static final String ARTICLE_USER_LIKE_KEY_PREFIX = "article:like:user:";
+
     // ==================== 分类 & 标签缓存 ====================
 
     /** 前台分类列表缓存 Key */

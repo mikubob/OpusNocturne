@@ -19,6 +19,14 @@ public interface ICommentService extends IService<Comment> {
     /** 前台：获取文章评论树 */
     List<CommentTreeVO> getCommentTree(Long articleId);
 
+    /**
+     * 获取文章评论统计
+     * 
+     * @param articleId 文章ID
+     * @return 统计Map
+     */
+    java.util.Map<String, Long> getArticleCommentStats(Long articleId);
+
     /** 前台：发表评论 */
     void createComment(CommentCreateDTO dto, String ipAddress, String userAgent);
 

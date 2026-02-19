@@ -89,6 +89,8 @@ public class SysSettingServiceImpl extends ServiceImpl<SysSettingMapper, SysSett
             setting.setArticlePageSize(dto.getArticlePageSize());
         if (dto.getCommentPageSize() != null)
             setting.setCommentPageSize(dto.getCommentPageSize());
+        if (dto.getAboutMe() != null)
+            setting.setAboutMe(dto.getAboutMe());
 
         // 3. 保存或更新数据库
         saveOrUpdate(setting);
@@ -110,6 +112,7 @@ public class SysSettingServiceImpl extends ServiceImpl<SysSettingMapper, SysSett
             case "siteKeywords" -> settings.getSiteKeywords() != null ? settings.getSiteKeywords() : defaultValue;
             case "footerText" -> settings.getFooterText() != null ? settings.getFooterText() : defaultValue;
             case "adminEmail" -> settings.getAdminEmail() != null ? settings.getAdminEmail() : defaultValue;
+            case "aboutMe" -> settings.getAboutMe() != null ? settings.getAboutMe() : defaultValue;
             default -> defaultValue;
         };
     }
@@ -127,6 +130,7 @@ public class SysSettingServiceImpl extends ServiceImpl<SysSettingMapper, SysSett
         vo.setCommentAudit(setting.getCommentAudit() != null && setting.getCommentAudit() == 1);
         vo.setArticlePageSize(setting.getArticlePageSize());
         vo.setCommentPageSize(setting.getCommentPageSize());
+        vo.setAboutMe(setting.getAboutMe());
         return vo;
     }
 }

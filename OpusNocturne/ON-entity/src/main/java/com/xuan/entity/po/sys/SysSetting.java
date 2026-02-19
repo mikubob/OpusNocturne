@@ -12,6 +12,7 @@ import java.io.Serial;
  * 系统设置表实体类
  * 对应数据库表：sys_setting
  * 用于存储站点配置信息
+ * 
  * @author 玄〤
  * @since 2026-02-17
  */
@@ -71,5 +72,11 @@ public class SysSetting extends BaseEntity {
      */
     @Schema(description = "评论列表每页条数", example = "20")
     private Integer commentPageSize;
+
+    /**
+     * 关于我
+     */
+    @Schema(description = "关于我")
+    private String aboutMe;
 
 }

@@ -1,6 +1,5 @@
 package com.xuan.entity.po.blog;
 
-
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xuan.common.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,6 +13,7 @@ import java.time.LocalDateTime;
  * 文章主表实体类
  * 对应数据库表：article
  * 用于存储文章的基本信息和内容
+ * 
  * @author 玄〤
  * @since 2026-02-16
  */
@@ -79,6 +79,12 @@ public class Article extends BaseEntity {
      */
     @Schema(description = "浏览次数", example = "100")
     private Long viewCount;
+
+    /**
+     * 点赞数
+     */
+    @Schema(description = "点赞数", example = "50")
+    private Long likeCount;
 
     /**
      * 是否置顶：1-是；0-否

@@ -147,7 +147,25 @@ create table article_tag (
 ) engine = innodb default charset = utf8mb4 comment = '文章-标签关联表';
 
 -- 模块三：互动与资源
--- 1.附件/资源表
+-- 1.友情链接表
+drop table if exists friend_link;
+create table friend_link (
+    id bigint not null auto_increment comment '主键id',
+    name varchar(50) not null comment '网站名称',
+    url varchar(255) not null comment '网站地址',
+    icon varchar(255) default null comment '网站图标',
+    description varchar(255) default null comment '描述',
+    email varchar(100) default null comment '站长邮箱',
+    status tinyint not null default 0 comment '状态：0-待审核；1-上线；2-下架',
+    sort int not null default 0 comment '排序',
+    is_delete tinyint not null default 0 comment '逻辑删除：1-是；0-否',
+    create_time datetime not null default current_timestamp comment '创建时间',
+    update_time datetime not null default current_timestamp on update current_timestamp comment '更新时间',
+    primary key (id),
+    key idx_status (status)
+) engine = innodb default charset = utf8mb4 comment = '友情链接表';
+
+-- 2.附件/资源表
 drop table if exists attachment;
 create table attachment (
     id bigint not null auto_increment comment '主键id',

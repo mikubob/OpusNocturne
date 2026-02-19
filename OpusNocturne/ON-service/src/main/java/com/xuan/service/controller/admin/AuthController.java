@@ -54,4 +54,13 @@ public class AuthController {
         String username = (String) request.getAttribute("username");
         return Result.success(authService.refreshToken(username));
     }
+
+    @Operation(summary = "修改密码")
+    @PutMapping("/change-password")
+    public Result<Void> changePassword(@Validated @RequestBody com.xuan.entity.dto.auth.ChangePasswordDTO dto,
+            HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        authService.changePassword(userId, dto);
+        return Result.success();
+    }
 }

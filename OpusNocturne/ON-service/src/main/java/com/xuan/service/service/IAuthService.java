@@ -31,4 +31,9 @@ public interface IAuthService {
      * 刷新 Token
      */
     LoginVO refreshToken(String username);
+
+    /**
+     * 修改密码
+     */
+    void changePassword(Long userId, com.xuan.entity.dto.auth.ChangePasswordDTO dto);
 }

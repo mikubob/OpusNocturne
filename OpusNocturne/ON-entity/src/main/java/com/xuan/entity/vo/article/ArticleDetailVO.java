@@ -102,6 +102,12 @@ public class ArticleDetailVO implements Serializable {
     private ArticleNavVO nextArticle;
 
     /**
+     * 点赞数
+     */
+    @Schema(description = "点赞数", example = "50")
+    private Long likeCount;
+
+    /**
      * 文章前后篇响应数据类
      * 用于在文章详情中展示上一篇和下一篇文章信息
      */

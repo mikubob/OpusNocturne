@@ -30,6 +30,12 @@ public class CommentController {
         return Result.success(commentService.getCommentTree(articleId));
     }
 
+    @Operation(summary = "获取文章评论统计")
+    @GetMapping("/stats/{articleId}")
+    public Result<java.util.Map<String, Long>> getCommentStats(@PathVariable Long articleId) {
+        return Result.success(commentService.getArticleCommentStats(articleId));
+    }
+
     @Operation(summary = "发表评论")
     @PostMapping
     public Result<Void> createComment(@Validated @RequestBody CommentCreateDTO dto, HttpServletRequest request) {

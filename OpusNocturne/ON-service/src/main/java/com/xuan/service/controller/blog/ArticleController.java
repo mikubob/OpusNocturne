@@ -34,4 +34,17 @@ public class ArticleController {
     public Result<ArticleDetailVO> getArticleDetail(@PathVariable Long id) {
         return Result.success(articleService.getBlogArticleDetail(id));
     }
+
+    @Operation(summary = "文章归档")
+    @GetMapping("/archive")
+    public Result<java.util.List<com.xuan.entity.vo.article.ArchiveVO>> getArchive() {
+        return Result.success(articleService.getArchive());
+    }
+
+    @Operation(summary = "文章点赞")
+    @PostMapping("/{id}/like")
+    public Result<Long> likeArticle(@PathVariable Long id, jakarta.servlet.http.HttpServletRequest request) {
+        String ip = com.xuan.common.utils.IpUtils.getIpAddr(request);
+        return Result.success(articleService.likeArticle(id, ip));
+    }
 }
