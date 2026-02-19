@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xuan.service.mapper.SysUserRoleMapper">
+
+    <!-- 根据用户ID删除关联 -->
+    <delete id="deleteByUserId"> DELETE FROM sys_user_role WHERE user_id = #{userId} </delete>
+
+    <!-- 根据用户ID查询角色ID列表 -->
+    <select id="selectRoleIdsByUserId" resultType="java.lang.Long"> SELECT role_id FROM
+        sys_user_role WHERE user_id = #{userId} </select>
+
+</mapper>

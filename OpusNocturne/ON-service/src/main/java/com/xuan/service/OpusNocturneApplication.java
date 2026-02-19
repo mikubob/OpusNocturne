@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author 玄〤
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.xuan")
 public class OpusNocturneApplication {
     public static void main(String[] args) {
         SpringApplication.run(OpusNocturneApplication.class, args);

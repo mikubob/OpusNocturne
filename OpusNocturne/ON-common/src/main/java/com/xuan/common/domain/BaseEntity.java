@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -37,7 +36,7 @@ public abstract class BaseEntity implements Serializable {
     @TableId(type = IdType.AUTO)
     @Schema(description = "主键ID")
     private Long id;
-    
+
     /**
      * 逻辑删除标识
      * 1: 删除, 0: 未删除
@@ -45,7 +44,7 @@ public abstract class BaseEntity implements Serializable {
     @TableLogic
     @Schema(description = "逻辑删除标识")
     private Integer isDelete;
-    
+
     /**
      * 创建时间
      * 插入时自动填充
@@ -53,7 +52,7 @@ public abstract class BaseEntity implements Serializable {
     @TableField(fill = FieldFill.INSERT)
     @Schema(description = "创建时间")
     private LocalDateTime createTime;
-    
+
     /**
      * 更新时间
      * 插入和更新时自动填充

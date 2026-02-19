@@ -1,7 +1,33 @@
 package com.xuan.service.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xuan.entity.dto.comment.CommentAuditDTO;
+import com.xuan.entity.dto.comment.CommentCreateDTO;
+import com.xuan.entity.dto.comment.CommentPageQueryDTO;
 import com.xuan.entity.po.interact.Comment;
-//TODO 评论服务接口
+import com.xuan.entity.vo.comment.CommentAdminVO;
+import com.xuan.entity.vo.comment.CommentTreeVO;
+
+import java.util.List;
+
+/**
+ * 评论服务接口
+ */
 public interface ICommentService extends IService<Comment> {
+
+    /** 前台：获取文章评论树 */
+    List<CommentTreeVO> getCommentTree(Long articleId);
+
+    /** 前台：发表评论 */
+    void createComment(CommentCreateDTO dto, String ipAddress, String userAgent);
+
+    /** 后台：分页查询评论 */
+    Page<CommentAdminVO> pageComments(CommentPageQueryDTO dto);
+
+    /** 后台：审核评论 */
+    void auditComment(Long id, CommentAuditDTO dto);
+
+    /** 后台：删除评论 */
+    void deleteComment(Long id);
 }

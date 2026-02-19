@@ -31,7 +31,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
         // 构建 401 错误响应
-        Result<String> result = Result.error(ErrorCode.UNAUTHORIZED.getCode(), "认证失败，请重新登录");
+        Result<?> result = Result.error(ErrorCode.UNAUTHORIZED);
         String json = JSON.toJSONString(result);
 
         // 设置 HTTP 状态码为 200（由业务码区分错误），并指定 JSON 格式

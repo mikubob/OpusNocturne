@@ -31,7 +31,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response,
             AccessDeniedException accessDeniedException) throws IOException, ServletException {
         // 构建 403 错误响应
-        Result<String> result = Result.error(ErrorCode.FORBIDDEN.getCode(), "权限不足，无法访问");
+        Result<?> result = Result.error(ErrorCode.FORBIDDEN);
         String json = JSON.toJSONString(result);
 
         // 设置 HTTP 状态码为 200（由业务码区分错误），并指定 JSON 格式
