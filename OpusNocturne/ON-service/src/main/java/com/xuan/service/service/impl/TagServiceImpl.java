@@ -138,4 +138,27 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
         // 清除缓存
         redisTemplate.delete(RedisConstant.TAG_LIST_KEY);
     }
+
+    @Override
+    @Transactional
+    public void batchDeleteTags(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            throw new BusinessException(ErrorCode.PARAM_ERROR.getCode(), "请选择要删除的标签");
+        }
+        // 检查每个标签是否关联文章
+        for (Long id : ids) {
+            long articleCount = articleTagMapper.selectCount(
+                    new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getTagId, id));
+            if (articleCount > 0) {
+                Tag t = this.getById(id);
+                String name = t != null ? t.getName() : String.valueOf(id);
+                throw new BusinessException(ErrorCode.PARAM_ERROR.getCode(),
+                        "标签【" + name + "】有关联文章，无法删除");
+            }
+        }
+        this.removeByIds(ids);
+
+        // 清除缓存
+        redisTemplate.delete(RedisConstant.TAG_LIST_KEY);
+    }
 }

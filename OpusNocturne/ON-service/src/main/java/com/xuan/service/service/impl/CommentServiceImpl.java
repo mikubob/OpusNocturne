@@ -128,6 +128,27 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         this.removeById(id);
     }
 
+    @Override
+    @Transactional
+    public void batchAuditComments(List<Long> ids, Integer status) {
+        if (ids == null || ids.isEmpty()) {
+            throw new BusinessException(ErrorCode.PARAM_ERROR.getCode(), "请选择要审核的评论");
+        }
+        this.lambdaUpdate()
+                .in(Comment::getId, ids)
+                .set(Comment::getStatus, status)
+                .update();
+    }
+
+    @Override
+    @Transactional
+    public void batchDeleteComments(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            throw new BusinessException(ErrorCode.PARAM_ERROR.getCode(), "请选择要删除的评论");
+        }
+        this.removeByIds(ids);
+    }
+
     /**
      * 构建评论树
      */

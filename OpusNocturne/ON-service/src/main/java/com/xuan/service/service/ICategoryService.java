@@ -30,4 +30,7 @@ public interface ICategoryService extends IService<Category> {
 
     /** 后台：删除分类 */
     void deleteCategory(Long id);
+
+    /** 后台：批量删除分类 */
+    void batchDeleteCategories(List<Long> ids);
 }

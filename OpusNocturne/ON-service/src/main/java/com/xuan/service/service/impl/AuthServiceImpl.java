@@ -1,6 +1,7 @@
 package com.xuan.service.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.xuan.common.enums.ErrorCode;
 import com.xuan.common.exceptions.BusinessException;
 import com.xuan.common.utils.JwtUtils;
@@ -69,8 +70,9 @@ public class AuthServiceImpl implements IAuthService {
                 jwtUtils.getExpiration(), TimeUnit.SECONDS);
 
         // 6. 更新最后登录时间
-        user.setLastLoginTime(LocalDateTime.now());
-        sysUserMapper.updateById(user);
+        sysUserMapper.update(null, new LambdaUpdateWrapper<SysUser>()
+                .eq(SysUser::getId, user.getId())
+                .set(SysUser::getLastLoginTime, LocalDateTime.now()));
 
         // 7. 构建返回结果
         LoginVO loginVO = new LoginVO();

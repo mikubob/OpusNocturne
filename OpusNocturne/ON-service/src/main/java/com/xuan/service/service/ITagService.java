@@ -29,4 +29,7 @@ public interface ITagService extends IService<Tag> {
 
     /** 后台：删除标签 */
     void deleteTag(Long id);
+
+    /** 后台：批量删除标签 */
+    void batchDeleteTags(List<Long> ids);
 }

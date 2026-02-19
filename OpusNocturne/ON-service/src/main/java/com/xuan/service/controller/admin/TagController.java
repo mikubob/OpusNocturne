@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 后台标签管理控制器
  */
@@ -47,6 +49,13 @@ public class TagController {
     @DeleteMapping("/{id}")
     public Result<Void> deleteTag(@PathVariable Long id) {
         tagService.deleteTag(id);
+        return Result.success();
+    }
+
+    @Operation(summary = "批量删除标签")
+    @DeleteMapping("/batch-delete")
+    public Result<Void> batchDeleteTags(@RequestBody List<Long> ids) {
+        tagService.batchDeleteTags(ids);
         return Result.success();
     }
 }

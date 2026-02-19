@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 后台分类管理控制器
  */
@@ -48,6 +50,13 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     public Result<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
+        return Result.success();
+    }
+
+    @Operation(summary = "批量删除分类")
+    @DeleteMapping("/batch-delete")
+    public Result<Void> batchDeleteCategories(@RequestBody List<Long> ids) {
+        categoryService.batchDeleteCategories(ids);
         return Result.success();
     }
 }

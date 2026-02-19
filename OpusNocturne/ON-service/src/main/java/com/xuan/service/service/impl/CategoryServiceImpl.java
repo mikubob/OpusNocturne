@@ -155,4 +155,27 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         // 清除缓存
         redisTemplate.delete(RedisConstant.CATEGORY_LIST_KEY);
     }
+
+    @Override
+    @Transactional
+    public void batchDeleteCategories(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            throw new BusinessException(ErrorCode.PARAM_ERROR.getCode(), "请选择要删除的分类");
+        }
+        // 检查每个分类下是否有文章
+        for (Long id : ids) {
+            long articleCount = articleMapper.selectCount(
+                    new LambdaQueryWrapper<Article>().eq(Article::getCategoryId, id));
+            if (articleCount > 0) {
+                Category cat = this.getById(id);
+                String name = cat != null ? cat.getName() : String.valueOf(id);
+                throw new BusinessException(ErrorCode.CATEGORY_HAS_ARTICLES.getCode(),
+                        "分类【" + name + "】下存在文章，无法删除");
+            }
+        }
+        this.removeByIds(ids);
+
+        // 清除缓存
+        redisTemplate.delete(RedisConstant.CATEGORY_LIST_KEY);
+    }
 }

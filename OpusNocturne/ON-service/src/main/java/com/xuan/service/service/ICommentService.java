@@ -30,4 +30,10 @@ public interface ICommentService extends IService<Comment> {
 
     /** 后台：删除评论 */
     void deleteComment(Long id);
+
+    /** 后台：批量审核评论 */
+    void batchAuditComments(List<Long> ids, Integer status);
+
+    /** 后台：批量删除评论 */
+    void batchDeleteComments(List<Long> ids);
 }
