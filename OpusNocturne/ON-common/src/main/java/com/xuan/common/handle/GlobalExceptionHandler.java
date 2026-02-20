@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.ConstraintViolation;
@@ -114,6 +115,15 @@ public class GlobalExceptionHandler {
     public Result<?> handleIllegalArgumentException(IllegalArgumentException e) {
         log.warn("非法参数异常：{}", e.getMessage());
         return Result.error(ErrorCode.PARAM_ERROR.getCode(), e.getMessage());
+    }
+
+    /**
+     * 请求体不可读异常（如：@RequestBody 参数缺失）
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Result<?> handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
+        log.warn("请求体不可读：{}", e.getMessage());
+        return Result.error(ErrorCode.PARAM_ERROR.getCode(), "请求参数格式不正确或缺失");
     }
 
     // ==================== 请求错误 ====================

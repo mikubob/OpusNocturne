@@ -86,8 +86,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         }
         wrapper.orderByAsc(Category::getSort);
 
+        // 确保分页参数不为null，提供默认值
+        Integer currentPage = queryDTO.getCurrent() != null ? queryDTO.getCurrent() : 1;
+        Integer pageSize = queryDTO.getSize() != null ? queryDTO.getSize() : 10;
         Page<Category> page = this.page(
-                new Page<>(queryDTO.getCurrent(), queryDTO.getSize()),
+                new Page<>(currentPage, pageSize),
                 wrapper);
 
         Page<CategoryAdminVO> voPage = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());

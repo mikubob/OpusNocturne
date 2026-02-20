@@ -91,7 +91,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         wrapper.orderByDesc(Article::getIsTop).orderByDesc(Article::getCreateTime);
 
-        Page<Article> page = this.page(new Page<>(dto.getCurrent(), dto.getSize()), wrapper);
+        // 确保分页参数不为null，提供默认值
+        Integer currentPage = dto.getCurrent() != null ? dto.getCurrent() : 1;
+        Integer pageSize = dto.getSize() != null ? dto.getSize() : 10;
+        Page<Article> page = this.page(new Page<>(currentPage, pageSize), wrapper);
 
         Page<ArticleAdminListVO> voPage = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
         voPage.setRecords(page.getRecords().stream().map(article -> {

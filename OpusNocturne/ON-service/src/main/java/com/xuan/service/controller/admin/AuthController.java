@@ -61,6 +61,6 @@ public class AuthController {
             HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         authService.changePassword(userId, dto);
-        return Result.success();
+        return Result.success(null, "密码修改成功，请重新登录");
     }
 }

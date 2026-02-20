@@ -49,7 +49,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         wrapper.orderByDesc(SysUser::getCreateTime);
 
-        Page<SysUser> page = this.page(new Page<>(dto.getCurrent(), dto.getSize()), wrapper);
+        // 确保分页参数不为null，提供默认值
+        Integer currentPage = dto.getCurrent() != null ? dto.getCurrent() : 1;
+        Integer pageSize = dto.getSize() != null ? dto.getSize() : 10;
+        Page<SysUser> page = this.page(new Page<>(currentPage, pageSize), wrapper);
 
         Page<UserInfoVO> voPage = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
         voPage.setRecords(page.getRecords().stream().map(user -> {
@@ -59,6 +62,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             vo.setNickname(user.getNickname());
             vo.setAvatar(user.getAvatar());
             vo.setEmail(user.getEmail());
+            vo.setStatus(user.getStatus());
+            vo.setCreateTime(user.getCreateTime());
             return vo;
         }).collect(Collectors.toList()));
         return voPage;
@@ -131,6 +136,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         vo.setNickname(user.getNickname());
         vo.setAvatar(user.getAvatar());
         vo.setEmail(user.getEmail());
+        vo.setStatus(user.getStatus());
+        vo.setCreateTime(user.getCreateTime());
+
+        // 查询角色ID列表
+        List<Long> roleIds = sysUserRoleMapper.selectRoleIdsByUserId(id);
+        vo.setRoleIds(roleIds);
 
         // 查询权限
         List<String> permissions = sysPermissionMapper.selectPermissionCodesByUserId(id);

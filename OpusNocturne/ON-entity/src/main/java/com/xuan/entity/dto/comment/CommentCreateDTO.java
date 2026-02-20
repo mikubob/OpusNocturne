@@ -14,6 +14,7 @@ import java.io.Serializable;
  * 发表评论请求参数类
  * 对应接口：6.2 发表评论
  * 用于接收前端发表评论的参数
+ * 
  * @author 玄〤
  * @since 2026-02-16
  */
@@ -30,20 +31,20 @@ public class CommentCreateDTO implements Serializable {
     @NotNull(message = "文章ID不能为空")
     @Schema(description = "文章ID，留言板传 0", example = "100", requiredMode = RequiredMode.REQUIRED)
     private Long articleId;
-    
+
     /**
      * 评论内容，必填
      */
     @NotBlank(message = "评论内容不能为空")
     @Schema(description = "评论内容", example = "写的真好！", requiredMode = RequiredMode.REQUIRED)
     private String content;
-    
+
     /**
      * 父评论ID，回复时必填
      */
     @Schema(description = "父评论ID，回复时必填", example = "501")
     private Long parentId;
-    
+
     /**
      * 根评论ID，回复楼中楼时必填
      */
@@ -64,4 +65,11 @@ public class CommentCreateDTO implements Serializable {
     @Size(max = 100, message = "邮箱长度不能超过100字符")
     @Schema(description = "邮箱", example = "user@example.com")
     private String email;
+
+    /**
+     * 个人网站地址
+     */
+    @Size(max = 200, message = "网站地址长度不能超过200字符")
+    @Schema(description = "个人网站地址", example = "https://example.com")
+    private String website;
 }

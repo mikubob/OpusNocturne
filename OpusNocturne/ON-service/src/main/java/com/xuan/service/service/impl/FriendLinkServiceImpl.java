@@ -53,7 +53,10 @@ public class FriendLinkServiceImpl extends ServiceImpl<FriendLinkMapper, FriendL
 
     @Override
     public Page<FriendLink> pageFriendLinks(FriendLinkPageQueryDTO query) {
-        Page<FriendLink> page = new Page<>(query.getCurrent(), query.getSize());
+        // 确保分页参数不为null，提供默认值
+        Integer currentPage = query.getCurrent() != null ? query.getCurrent() : 1;
+        Integer pageSize = query.getSize() != null ? query.getSize() : 10;
+        Page<FriendLink> page = new Page<>(currentPage, pageSize);
         LambdaQueryWrapper<FriendLink> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(query.getStatus() != null, FriendLink::getStatus, query.getStatus())
                 .like(StrUtil.isNotBlank(query.getName()), FriendLink::getName, query.getName())
